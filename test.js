@@ -102,9 +102,9 @@ async function runTournament() {
     console.log(`Here are the parings for round ${currentRound}:`);
     playerList.forEach((player, i) => {
       console.log(
-        `Pod:${Math.floor(i / podSize) + 1} Name: ${player.name} ${
+        `Pod:${Math.floor(i / podSize) + 1} Name: ${player.name} Points: ${
           player.points
-        }`
+        } OWP: ${calcOWP(player)}`
       );
     });
     console.log("Please enter the results for round " + currentRound);
