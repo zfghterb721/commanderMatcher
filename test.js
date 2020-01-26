@@ -1,72 +1,59 @@
+const readline = require("readline-promise").default;
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 var _ = require("lodash");
 var podSize = 4;
 var currentRound = 0;
+
+//Fill out Players here ahead of time make sure they have a uniqueId!
 var playerList = [
   {
-    name: "Rebecca Lott",
-    points: 3,
-    id: 0
+    name: "Rebecca Lott"
   },
   {
-    name: "Bates Deleon",
-    points: 2,
-    id: 1
+    name: "Bates Deleon"
   },
   {
-    name: "Cheri Craig",
-    points: 2,
-    id: 2
+    name: "Cheri Craig"
   },
   {
-    name: "Rollins Sherman",
-    points: 2,
-    id: 3
+    name: "Rollins Sherman"
   },
   {
-    name: "Loraine Fuentes",
-    points: 0,
-    id: 4
+    name: "Loraine Fuentes"
   },
   {
-    name: "Sondra Young",
-    points: 3,
-    id: 5
+    name: "Sondra Young"
   },
   {
-    name: "Chris Holland",
-    points: 3,
-    id: 6
+    name: "Chris Holland"
   },
   {
-    name: "Bentley Morrison",
-    points: 0,
-    id: 7
+    name: "Bentley Morrison"
   },
   {
-    name: "Harrington Poole",
-    points: 1,
-    id: 8
+    name: "Harrington Poole"
   },
   {
-    name: "Osborn Joseph",
-    points: 2,
-    id: 9
+    name: "Osborn Joseph"
   },
   {
-    name: "Sallie Carney",
-    points: 0,
-    id: 10
+    name: "Sallie Carney"
   },
   {
-    name: "Jo Sweeney",
-    points: 0,
-    id: 11
+    name: "Jo Sweeney"
   }
 ];
 //generate tournament object
+var i = 0;
 for (var player of playerList) {
   //player.points = Math.random();
   player.games = [];
+  player.id = i;
+  player.points = 0;
+  i++;
 }
 
 //calculates winPercentage for players
@@ -107,3 +94,33 @@ function calcOWP(player) {
     ? 0
     : opponentWinPList.reduce((a, b) => a + b, 0) / opponentWinPList.length;
 }
+
+//don't worry about the async keyword it's just a fancier way of doing promises
+async function runTournament() {
+  while (true) {
+    nextRound();
+    console.log(`Here are the parings for round ${currentRound}:`);
+    playerList.forEach((player, i) => {
+      console.log(
+        `Pod:${Math.floor(i / podSize) + 1} Name: ${player.name} ${
+          player.points
+        }`
+      );
+    });
+    console.log("Please enter the results for round " + currentRound);
+    for (player of playerList) {
+      var points = await rl.questionAsync(
+        `How many points did ${player.name} score?`
+      );
+      if (isNaN(parseInt(points))) {
+        points = await rl.questionAsync(
+          `That's not a number... How many points did ${player.name} score?`
+        );
+      }
+      player.points += parseInt(points);
+      console.log(player);
+    }
+  }
+}
+
+runTournament();
